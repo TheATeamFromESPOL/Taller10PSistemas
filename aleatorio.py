@@ -1,17 +1,17 @@
 import random as r
 import os
 
-directorio = 'C:/Users/Eduardo/Desktop/archivos_aleatorios/'
+directorio = os.getcwd() + "/archivos_aleatorios/"
 
 if not os.path.exists(directorio):
     os.makedirs(directorio)
 
 contador = 50
-letras = 'abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+letras = "abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 for i in range(contador):
     tamano = r.randint(1000000,10000000)
-    archivo = open(directorio + 'archivo' + str(i), 'w+')
+    archivo = open(directorio + "archivo" + str(i), "w+")
 
     texto = ""
     for j in range(tamano):
