@@ -44,7 +44,7 @@ int main( int argc, char *argv[]) {
 //falta hacer aquí
 
 	int n; 
-	char buf[BUFLEN]; 
+	char buf[BUFLEN];
 
 	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0) 				
 		write(fd, buf, n);

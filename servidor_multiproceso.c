@@ -70,9 +70,22 @@ int main( int argc, char *argv[]) {
 			new = accept(sockfd,(struct sockaddr*)&direccion_cliente,&len);
 			
 			char *ruta;
+			char *archivo;
+
 			recv(new, ruta, BUFLEN,0);
 
 			int fd = open(ruta, O_RDONLY);
+			
+			int tam;
+			while((tam = read(fd,archivo,BUFLEN))>0){
+				send(new,archivo,tam,0);
+			}
+
+			close(new);
+			close(fd);
+			break;
+		}else{
+			close(new);
 		}
-	}	
+	}
 }
