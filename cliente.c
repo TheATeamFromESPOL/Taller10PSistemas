@@ -24,7 +24,8 @@ int main( int argc, char *argv[]) {
 	
 	char *ip = argv[1];
 	int puerto = atoi(argv[2]);
-	char *namefile = argv[4];
+	char *ruta = argv[3];
+	char *archivo = argv[4];
 
 
 	struct sockaddr_in direccion_cliente;
@@ -37,13 +38,13 @@ int main( int argc, char *argv[]) {
 
 	sockfd = socket(direccion_cliente.sin_family, SOCK_STREAM, 0);
 	connect(sockfd, (struct sockaddr *)&direccion_cliente, sizeof(direccion_cliente));
-	
-	
-	int fd = open(namefile,O_WRONLY|O_CREAT,S_IRUSR|S_IWUSR);
 
+	send(sockfd,ruta,strlen(ruta),0);
+
+//falta hacer aquí
 
 	int n; 
-	char buf[ BUFLEN]; 
+	char buf[BUFLEN]; 
 
 	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0) 				
 		write(fd, buf, n);

@@ -30,7 +30,7 @@ int main( int argc, char *argv[]) {
 	char *ip = argv[1];
 	int puerto = atoi(argv[2]);
 
-	struct sockaddr_in direccion_servidor;
+	struct sockaddr_in direccion_servidor, direccion_cliente;
 
 	memset(&direccion_servidor, 0, sizeof(direccion_servidor));
 
@@ -39,28 +39,40 @@ int main( int argc, char *argv[]) {
 	direccion_servidor.sin_addr.s_addr = inet_addr(ip);
 
 	sockfd = socket(((struct sockaddr *)&direccion_servidor)->sa_family, SOCK_STREAM, 0);
+	if(sockfd == -1){
+		perror("socket");	
+	}
 
-	bind(sockfd, (struct sockaddr *)&direccion_servidor, sizeof(direccion_servidor));
+	int len = sizeof(direccion_servidor);
 
-	listen(sockfd, 100);
+	if(bind(sockfd, (struct sockaddr *)&direccion_servidor, sizeof(direccion_servidor)) == -1){
+		perror("bind");
+	}
+	
+	if(listen(sockfd, 100) == -1)
+		perror("listen");
+	}
 
 	int clfd, fp; 
 	char buffer;
 	
-	if (( clfd = accept(sockfd, NULL, NULL)) < 0) {
-		syslog( LOG_ERR, "ruptimed: accept error: %s", strerror( errno));			
-		exit( 1); 
-	} 
-
-
-	fp = open("./imagen/perro.jpg", O_RDONLY);
-
-	while(read(fp,&buffer,sizeof(buffer))!=0){
-		send(clfd, &buffer, sizeof(buffer), 0);
-	}
+	pid_t pid
+	int new;
 	
-	
+	while(1){
+		pid = fork();
+		if(pid == 0){
+			sigset_t set;
+			sigemptyset(&set);
+			sigaddset(&set,SIGTSTP);
+			sigprocmask(SIG_BLOCK,&set,0);
+			
+			new = accept(sockfd,(struct sockaddr*)&direccion_cliente,&len);
+			
+			char *ruta;
+			recv(new, ruta, BUFLEN,0);
 
-	close( fp);
-	close(clfd);
+			int fd = open(ruta, O_RDONLY);
+		}
+	}	
 }

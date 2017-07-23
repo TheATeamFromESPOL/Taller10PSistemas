@@ -1,6 +1,6 @@
 all: servidor cliente archivos
 
-servidor: servidor.c 
+servidor: servidor_multiproceso.c 
 	gcc -Wall -g $^ -o $@
 
 cliente: cliente.c 
@@ -13,3 +13,5 @@ archivos: aleatorio.py
 
 clean:
 	rm -rf cliente servidor
+	rm -rf ./archivos_aleatorios/*
+	rmdir archivos_aleatorios
