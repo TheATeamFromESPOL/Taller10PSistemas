@@ -1,4 +1,4 @@
-all: servidor cliente archivos
+all: servidor cliente
 
 servidor: servidor_multiproceso.c 
 	gcc -Wall -g $^ -o $@

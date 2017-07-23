@@ -39,24 +39,19 @@ int main( int argc, char *argv[]) {
 	direccion_servidor.sin_addr.s_addr = inet_addr(ip);
 
 	sockfd = socket(((struct sockaddr *)&direccion_servidor)->sa_family, SOCK_STREAM, 0);
-	if(sockfd == -1){
+
+	if(sockfd == -1)
 		perror("socket");	
-	}
 
-	int len = sizeof(direccion_servidor);
+	unsigned int len = sizeof(direccion_servidor);
 
-	if(bind(sockfd, (struct sockaddr *)&direccion_servidor, sizeof(direccion_servidor)) == -1){
+	if(bind(sockfd, (struct sockaddr *)&direccion_servidor, sizeof(direccion_servidor)) == -1)
 		perror("bind");
-	}
 	
 	if(listen(sockfd, 100) == -1)
 		perror("listen");
-	}
-
-	int clfd, fp; 
-	char buffer;
 	
-	pid_t pid
+	pid_t pid;
 	int new;
 	
 	while(1){
@@ -77,7 +72,8 @@ int main( int argc, char *argv[]) {
 			int fd = open(ruta, O_RDONLY);
 			
 			int tam;
-			while((tam = read(fd,archivo,BUFLEN))>0){
+			tam = read(fd,archivo,BUFLEN);
+			while(tam>0){
 				send(new,archivo,tam,0);
 			}
 

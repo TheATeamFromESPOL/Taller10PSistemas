@@ -41,13 +41,16 @@ int main( int argc, char *argv[]) {
 
 	send(sockfd,ruta,strlen(ruta),0);
 
-//falta hacer aquí
+	int fd = open(archivo,O_WRONLY|O_CREAT,S_IRUSR|S_IWUSR);
 
 	int n; 
-	char buf[BUFLEN];
+	char *buf;
 
-	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0) 				
+	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0) 			
 		write(fd, buf, n);
 	if (n < 0) 	
-		printf(" recv error"); 
+		printf(" recv error");
+	
+	close(fd);
+	close(sockfd);
 }
