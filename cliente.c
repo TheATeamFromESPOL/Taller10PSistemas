@@ -47,9 +47,11 @@ int main( int argc, char *argv[]) {
 	char *buf;
 	buf=(char*)malloc(BUFLEN*sizeof(char*));
 
-	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0) 			
+	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0){
 		write(fd, buf, n);
-	if (n < 0) 	
+		memset(buf,0,1);
+	}
+	if (n < 0)
 		printf(" recv error");
 	
 	close(fd);
