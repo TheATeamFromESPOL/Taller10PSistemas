@@ -52,7 +52,7 @@ int main( int argc, char *argv[]) {
 		perror("listen");
 	
 	pid_t pid;
-	int new;
+	int new = 0;
 	
 	while(1){
 		pid = fork();
@@ -67,18 +67,21 @@ int main( int argc, char *argv[]) {
 			char *ruta;
 			char *archivo;
 
+			ruta=(char*)malloc(BUFLEN*sizeof(char*));
+
 			recv(new, ruta, BUFLEN,0);
 
 			int fd = open(ruta, O_RDONLY);
 			
-			int tam;
-			tam = read(fd,archivo,BUFLEN);
-			while(tam>0){
-				send(new,archivo,tam,0);
+			//int tam;
+			//tam = read(fd,archivo,BUFLEN);
+			while(read(fd,&archivo,BUFLEN)!=0){
+				send(new,&archivo,BUFLEN,0);
 			}
 
-			close(new);
+			
 			close(fd);
+			close(new);
 			break;
 		}else{
 			close(new);

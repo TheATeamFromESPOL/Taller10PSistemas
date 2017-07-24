@@ -45,6 +45,7 @@ int main( int argc, char *argv[]) {
 
 	int n; 
 	char *buf;
+	buf=(char*)malloc(BUFLEN*sizeof(char*));
 
 	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0) 			
 		write(fd, buf, n);
