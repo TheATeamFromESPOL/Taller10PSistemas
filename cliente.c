@@ -41,19 +41,23 @@ int main( int argc, char *argv[]) {
 
 	send(sockfd,ruta,strlen(ruta),0);
 
-	int fd = open(archivo,O_WRONLY|O_CREAT,S_IRUSR|S_IWUSR);
+	//int fd = open(archivo,O_WRONLY|O_CREAT,S_IRUSR|S_IWUSR);
+
+	FILE *fptr;
+	fptr = fopen(archivo,"w+");
 
 	int n; 
 	char *buf;
 	buf=(char*)malloc(BUFLEN*sizeof(char*));
 
 	while ((n = recv(sockfd, buf, BUFLEN, 0)) > 0){
-		write(fd, buf, n);
+		fprintf(fptr,"%s",buf);
+		//write(fd, buf, n);
 		memset(buf,0,1);
 	}
 	if (n < 0)
 		printf(" recv error");
 	
-	close(fd);
+	fclose(fptr);
 	close(sockfd);
 }

@@ -16,6 +16,7 @@
 #include <arpa/inet.h>
 #include <sys/resource.h>
 
+#define BUFRUTA 1000
 #define BUFLEN 128
 #define QLEN 10 
 
@@ -23,27 +24,19 @@
 #define HOST_NAME_MAX 256 
 #endif
 
-int main( int argc, char *argv[]) { 
-	
-	int sockfd;
+int sockfd;
+pid_t hue;
+
+void catchSignal(int senial){
+	close(sockfd);
+	printf("\nCierre de socket.\nCierre de Servidor");
+	exit(1);
+}
+
+int main( int argc, char *argv[]) {
 
 	char *ip = argv[1];
 	int puerto = atoi(argv[2]);
-
-	//Funcion de ayuda para setear la bandera close on exec
-	void set_cloexec(int fd){
-		if(fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC) < 0){
-			printf("Error al establecer la bandera FD_CLOEXEC\n");	
-		}
-	}
-
-	//Funcion que se ejecuta al hacer Ctrl+z
-	void controlarSenal(int signal)
-	{
-		close(sockfd);
-		printf("\nSocket cerrado.\nFin del servidor.");
-		exit(1); 
-	}
 
 	struct sockaddr_in direccion_servidor, direccion_cliente;
 
@@ -69,23 +62,17 @@ int main( int argc, char *argv[]) {
 	pid_t pid;
 	int new = 0;
 	
-	while(1){
-		sigset_t set;
-		sigemptyset(&set);
-		sigaddset(&set,SIGTSTP);
-		sigprocmask(SIG_BLOCK,&set,0);
-			
+	while(1){	
 		new = accept(sockfd,(struct sockaddr*)&direccion_cliente,&len);
 		
 		pid = fork();
 		if(pid == 0){
-			set_cloexec(new);
 			char *ruta;
 			char *archivo;
 
-			ruta=(char*)malloc(BUFLEN*sizeof(char*));
+			ruta=(char*)malloc(BUFRUTA*sizeof(char*));
 
-			recv(new, ruta, BUFLEN,0);
+			recv(new, ruta, BUFRUTA,0);
 
 			int fd = open(ruta, O_RDONLY);
 			
@@ -100,6 +87,7 @@ int main( int argc, char *argv[]) {
 		}else if (pid<0){
 			printf("No hay hijo.");
 		}else{
+			signal(SIGINT,catchSignal);
 			close(new);
 		}
 	}
